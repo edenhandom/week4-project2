@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Form</title>
+    
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Syne:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Shrikhand&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 20px; /* Adds a margin of 20 pixels to all sides of the body */
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #6EB8BE;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        form {
+            margin-top: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box; /* Ensures padding and border are included in the width */
+        }
+        button[type="submit"] {
+            
+            background-color: #EE6A92;
+            color: #FFF6ED;
+            border: none;
+            padding: 12px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+            font-family: 'Shrikhand', cursive; /* Change font to Shrikhand */
+        }
+        button[type="submit"]:hover {
+            background-color: #A6BA1A;
+        }
+        h1 {
+            font-family: 'Syne', sans-serif;
+            text-align: center;
+            font-weight: 700;
+            font-size: 2.0rem; /* Adjust as needed */
+            margin-top: 20px; /* Example margin top */
+        }
+    </style>
+
+</head>
+<body>
+
+    <nav>
+        <div class="features">
+          <a class="button" href="/history_form">History Form</a>
+          <a class="button" href="/insights">Insights</a>
+          <a class="button" href="/user_form">User Form</a>
+        </div>
+    
+        <a id='webtitle' href="/home">Mood Mix</a>
+        <button id="login" class="button" onclick="window.location.href='/login'">Login</button>
+      </nav>
+    
+      <br>
+    <h1>Enter Your Information</h1>
+    <br>
+    <div class="container">
+    <form action="{{ url_for('user_form') }}" method="POST">
+        {{ form.hidden_tag() }}
+        
+        <br>
+        <div>
+            {{ form.star_sign.label }}
+            {{ form.star_sign(size=32) }}
+        </div>
+        <br>
+        <div>
+            {{ form.personality_traits.label }}
+            {{ form.personality_traits(rows=4, cols=50) }}
+        </div>
+        <br>
+        <div>
+            {{ form.fav_genre1.label }}
+            {{ form.fav_genre1(size=32) }}
+        </div>
+        <br>
+        <div>
+            {{ form.fav_genre2.label }}
+            {{ form.fav_genre2(size=32) }}
+        </div>
+        <br>
+        <div>
+            {{ form.fav_genre3.label }}
+            {{ form.fav_genre3(size=32) }}
+        </div>
+        <br>
+        <button type="submit">Submit</button>
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Syne:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Shrikhand&display=swap" rel="stylesheet">
+
+    <style>
+
+        body {
+            margin: 20px; /* Adds a margin of 20 pixels to all sides of the body */
+        }
+
+        h2 {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin-top: 20px;
+        }
+
+        .button[type="submit"] {
+            
+            background-color: #EE6A92;
+            color: #FFF6ED;
+            border: none;
+            padding: 12px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+            font-family: 'Shrikhand', cursive; /* Change font to Shrikhand */
+        }
+        .button:hover {
+            background-color: #A6BA1A;
+
+        }
+
+        table {
+            width: 50%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #F5CAE8; /* Border color */
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #E9DED4; /* Light gray background for table headers */
+        }
+
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="features">
+          <a class="button" href="/history_form">History Form</a>
+          <a class="button" href="/insights">Insights</a>
+          <a class="button" href="/user_form">User Form</a>
+        </div>
+    
+        <a id='webtitle' href="/home">Mood Mix</a>
+        <button id="login" class="button" onclick="window.location.href='/login'">Login</button>
+      </nav>
+    
+    <br>
+
+    <h2>Submitted User Data</h2>
+    <br>
+    <table border="2">
+        <tr>
+            <th>Data</th>
+            <th>Response</th>
+        </tr>
+        <tr>
+            <td>Star Sign</td>
+            <td>{{ user_data.star_sign }}</td>
+        </tr>
+        <tr>
+            <td>Personality Traits</td>
+            <td>{{ user_data.personality_traits }}</td>
+        </tr>
+        <tr>
+            <td>Favorite Genre 1</td>
+            <td>{{ user_data.fav_genre1 }}</td>
+        </tr>
+        <tr>
+            <td>Favorite Genre 2</td>
+            <td>{{ user_data.fav_genre2 }}</td>
+        </tr>
+        <tr>
+            <td>Favorite Genre 3</td>
+            <td>{{ user_data.fav_genre3 }}</td>
+        </tr>
+    </table>
+
+    <br>
+
+    <h2>Music Recommendations</h2>
+    <br>
+    <p style="white-space: pre-line;">{{ recommendations }}</p>
+    <!--
+    <ul>
+        {% for song in recommendations %}
+            <li>{{ song }}</li>
+        {% endfor %}
+    </ul>
+    <br>
+-->
+    <br>
+    <br>
+    <a class="button" href="{{ url_for('home') }}">Go Home</a>
+</body>
+</html>
