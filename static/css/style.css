@@ -9,48 +9,96 @@
   --pink: #ee6b92;
   --orange: #ED6618;
   --aqua: #9EC8A9;
+  --yellow: #ffe492;
   --header: "Shrikhand", serif; /* Fancy font */
-  --text: "Inter", sans-serif; /* Basic Font*/
+  --text: "Lato", sans-serif; /* Basic Font*/
 }
 
 * {
+  padding: 0px;
+  margin: 0px;
   font-family: var(--text);
-  padding: 0;
-  margin: 0;
+  color: var(--purple);
 }
 
 body {
   background-color: var(--cream);
-  margin: 20px; /* Adds a margin of 20 pixels to all sides of the body */
+  margin: 0px; /* Adds a margin of 20 pixels to all sides of the body */
 } 
 
-h1, h2 {
+h1{
   font-family: var(--header);
-  color: #E63A26;
+  color: var(--green);
+}
+
+h2{
+  font-family: var(--header);
+  font-size: 2.5em;
+  color: var(--light-pink);
 }
 
 p {
-  color: #6EB8BE; 
+  line-height: 1.5em;
 }
 
 a {
-  color: #E63A26; 
   text-decoration: none;
 }
 
-a:hover {
-  color: #F5CAE8; 
+.features a:hover {
+  color: #9EC8A9; 
+  background-color: #f6dc8e;
+  box-shadow: 1px 1px #9EC8A9;
   text-decoration: none;
+}
+
+.home-box {
+  /* display: block;
+  width: 100%;
+  margin-bottom: 10vh;
+  
+  flex: 1;
+  */
+
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.container {
+  display: flex; /* inline-block*/
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20px;
+}
+
+.left-side {
+  /* padding: 20px; */ 
+  flex: 1;
+  margin-right: 40px;
+}
+
+.image {
+  flex: 1;
+  text-align: right;
+}
+.image img {
+  max-width: 100%;
+  height: auto;
 }
 
 /* Nav Bar Styles */
 nav {
-  width: 93vw;
-  border: solid black 1px;
+  width: auto;
+
+  border-style: solid;
+  border-color: rgba(99, 89, 133, 0.482);
+  border-width: 0pc 0px 2px 0px;
+
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 10px;
+
+  padding: 30px 7vw 20px 7vw;
 }
 
 .features {
@@ -59,21 +107,142 @@ nav {
 }
 
 .button {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--text);
+  color: var(--aqua);
   font-weight: bold;
+  font-size: .8em;
+  text-align: center;
+
   padding: 5px;
-  border: solid black 2px;
-  min-width: 50px;
+
+  border: solid var(--aqua) 2px;
+  background-color: var(--yellow);
+
+  min-width: 9vw;
+
+  box-shadow: 2px 2px var(--aqua);
+}
+
+#body {
+  margin: 10vh 10vw 10vh 10vw;
 }
 
 #webtitle {
   font-family: var(--header);
-  font-size: 2rem;
+  font-size: 1.5rem;
   color: var(--green);
   flex-grow: 1;
-  text-align: center;
+  text-align: left;
 }
 
 #login {
   margin-left: auto;
+}
+
+
+/* USER FORM */
+button[type="submit"]:hover {
+  background-color: #A6BA1A;
+}
+
+button[type="submit"] {
+            
+  background-color: #EE6A92;
+  color: #FFF6ED;
+  border: none;
+  padding: 12px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin-top: 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  font-family: 'Shrikhand', cursive; /* Change font to Shrikhand */
+}
+
+.center {
+  text-align: center;
+}
+
+
+.form-container {
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: #6EB8BE;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+form {
+  margin-top: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+input[type="text"],
+textarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box; /* Ensures padding and border are included in the width */
+}
+
+/* For Insights Page*/
+
+div.insights {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+div.container-output {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 75%;
+  height: 60vh;
+  border: 5px solid black;
+  border-radius: 15px;
+  margin: 10px 0px;
+
+}
+
+h1.title {
+  align-items: center;
+}
+
+input#playlist-url {
+  width: 60%;
+  height: 30px;
+  border-radius: 5px;
+  border: 2px solid black;
+  margin: 10px 0px;
+
+}
+
+/* Adjust the height for smaller screens */
+@media (max-width: 600px) {
+  .container-output {
+      height: 70vh; /* 70% of the viewport height for small screens */
+  }
+}
+
+/* Adjust the height for larger screens */
+@media (min-width: 1200px) {
+  .container-output {
+      height: 30vh; /* 30% of the viewport height for large screens */
+  }
 }

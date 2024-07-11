@@ -1,7 +1,20 @@
 <!-- Playlist to User Insights -->
-{% extends "layout.html" %}
+{% extends "layout.html" %} {% block content %}
+  <!-- <form action="/run_insights" method="post">
+	<button type="submit" class="btn btn-primary">Let's Go</button>
+  </form> -->
+	<div class="insights">
+		<h1 class="title">Ready to Get Started?</h1>
+		<div class="container-output"></div>
 
-{% block content %}
-<h1> These are our playlists </h1>
-<p>{{ text }}</p>
+	  		<input type="text" id="playlist-url" placeholder="Enter your Spotify Playlist URL"">
+
+	  		<button type="submit" class="btn btn-primary">Let's Go</button>
+  		</div>
+  		{% if output %}
+  			<h2>Output:</h2>
+  			<pre>{{ output }}</pre>
+  		{% endif %}
+	</div>
+
 {% endblock %}

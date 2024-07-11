@@ -1,5 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "layout.html" %}
+
+{% block content %}
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -44,7 +46,7 @@
         }
 
         table {
-            width: 50%;
+            width: 35%;
             border-collapse: collapse;
             margin-top: 20px;
         }
@@ -61,26 +63,31 @@
         th {
             background-color: #E9DED4; /* Light gray background for table headers */
         }
+        li.song:hover{
+            color: #A6BA1A;
+            background-color: #FFF3FB;
+            font-weight: bold;
+            
+        }
+
+
 
     </style>
 </head>
 <body>
 
-    <nav>
-        <div class="features">
-          <a class="button" href="/history_form">History Form</a>
-          <a class="button" href="/insights">Insights</a>
-          <a class="button" href="/user_form">User Form</a>
-        </div>
-    
-        <a id='webtitle' href="/home">Mood Mix</a>
-        <button id="login" class="button" onclick="window.location.href='/login'">Login</button>
-      </nav>
-    
+    <h2>Music Recommendations</h2>
     <br>
-
+    <ul>
+        {% for song in recommendations %}
+            <li class="song">{{ song.song }} - {{ song.artist | join(', ') }} - {{ song.link | safe }}</li>
+            <br>
+            {% endfor %}
+    </ul>
+    <br>
+    
     <h2>Submitted User Data</h2>
-    <br>
+
     <table border="2">
         <tr>
             <th>Data</th>
@@ -109,20 +116,10 @@
     </table>
 
     <br>
+    <br>
+    <br>
 
-    <h2>Music Recommendations</h2>
-    <br>
-    <p style="white-space: pre-line;">{{ recommendations }}</p>
-    <!--
-    <ul>
-        {% for song in recommendations %}
-            <li>{{ song }}</li>
-        {% endfor %}
-    </ul>
-    <br>
--->
-    <br>
-    <br>
+
     <a class="button" href="{{ url_for('home') }}">Go Home</a>
 </body>
-</html>
+{% endblock %}

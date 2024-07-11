@@ -17,8 +17,11 @@ BASE_URL = 'https://api.spotify.com/v1/'
 def connectSpotifyAPI():
 
     # Get client credentials from environment variables
-    client_id = os.environ.get("SPOTIFY_CLIENT_ID")
-    client_secret = os.environ.get("SPOTIFY_CLIENT_SECRET")
+    # client_id = os.environ.get("SPOTIFY_CLIENT_ID")
+    # client_secret = os.environ.get("SPOTIFY_CLIENT_SECRET")
+
+    client_id = 'ad91a46157df4ba080456f92c7a74ef8'
+    client_secret = '9d4140d511c64467a582b075b990cbfe'
 
     # Make sure to run envir. var. (source ~/.bashrc)
 

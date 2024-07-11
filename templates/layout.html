@@ -11,9 +11,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Shrikhand&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Syne:wght@400;700&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Shrikhand&display=swap" rel="stylesheet">
 
     <!-- CSS Style sheet-->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
@@ -23,17 +21,17 @@
 </head>
 <body>
   <nav>
-    <div class="features">
-      <a class="button" href="/history_form">History Form</a>
-      <a class="button" href="/insights">Insights</a>
-      <a class="button" href="/user_form">User Form</a>
-    </div>
-
     <a id='webtitle' href="/home">Mood Mix</a>
-    <a class="button" id="login" href='/login'>Login</a>
+
+    <div class="features">
+      <a class="button" href="/insights">INSIGHTS</a>
+      <a class="button" href="/user_form">FORM</a>
+    </div> 
   </nav>
-  {% block content %}
-  
-  {% endblock %}
+  <div id = "body">
+    {% block content %}
+      <!-- All other pages content go here -->
+    {% endblock %}
+  </div>
 </body>
 </html>
