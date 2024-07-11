@@ -10,6 +10,7 @@
   --orange: #ED6618;
   --aqua: #9EC8A9;
   --yellow: #ffe492;
+  --blue: #6EB8BE;
   --header: "Shrikhand", serif; /* Fancy font */
   --text: "Lato", sans-serif; /* Basic Font*/
 }
@@ -35,6 +36,14 @@ h2{
   font-family: var(--header);
   font-size: 2.5em;
   color: var(--light-pink);
+}
+.special-header {
+  color: var(--blue); /* Override color for the special header */
+}
+h3{
+  font-family: var(--header);
+  font-size: 2.0em;
+  color: var(--orange);
 }
 
 p {
@@ -168,7 +177,7 @@ button[type="submit"] {
 
 
 .form-container {
-  max-width: 600px;
+  max-width: 800px;
   margin: 0 auto;
   background-color: #6EB8BE;
   padding: 20px;

@@ -17,6 +17,10 @@
             margin: 20px; /* Adds a margin of 20 pixels to all sides of the body */
         }
 
+        h1 {
+            text-align: left;
+        }
+
         h2 {
             font-family: 'Syne', sans-serif;
             font-weight: 700;
@@ -46,7 +50,7 @@
         }
 
         table {
-            width: 35%;
+            width: 40%;
             border-collapse: collapse;
             margin-top: 20px;
         }
@@ -75,17 +79,20 @@
     </style>
 </head>
 <body>
-
-    <h2>Music Recommendations</h2>
+    <h1>Some songs we think you might like:</h1>
+    <!--h2>Music Recommendations</h2-->
     <br>
     <ul>
         {% for song in recommendations %}
-            <li class="song">{{ song.song }} - {{ song.artist | join(', ') }} - {{ song.link | safe }}</li>
+            <li class="song">
+                <a href="{{ song.link }}" target="_blank">{{ song.song }}</a> - {{ song.artist | join(', ') }} 
+            </li>
             <br>
             {% endfor %}
     </ul>
     <br>
     
+    <!--
     <h2>Submitted User Data</h2>
 
     <table border="2">
@@ -114,9 +121,8 @@
             <td>{{ user_data.fav_genre3 }}</td>
         </tr>
     </table>
-
-    <br>
-    <br>
+-->
+  
     <br>
 
 
