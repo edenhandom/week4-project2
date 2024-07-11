@@ -11,8 +11,8 @@
     <!--container-->
     <main class="container">
         <div class="left-side">
-            <div class="home-box" id="questions">
-                <h2>Is there a Link Between your Music Taste and Personality?</h2>
+            <div class="home-box" id="questions-about-us"> 
+                <h2 class="text-boarder">Is there a Link Between your Music Taste and Personality?</h2>
                 <p> 
                     <br>
                     Ever wondered what your music taste says about you? At Mood Mix, we believe that the 
@@ -26,10 +26,8 @@
                     Your favorite genres can reveal aspects of your age, social class, income, 
                     cultural background, and even self-esteem. 
                 </p>
-            </div>
-
-            <div class="home-box" id="about-us">
-                <h2>About us</h2>
+                <br>
+                <h2 class="text-boarder">About us</h2>
                 <br>
                 <p> At Mood Mix, we process your Spotify playlists to provide insights into your personality and recommendations 
                      of what music may resonate with you. Whether you're curious about what your playlist says 
@@ -43,7 +41,7 @@
             </div>
         </div>
         <div class="image">
-            <img src="images/home.png" alt="dude listening to music">
+            <img src="{{url_for('static',filename='images/home.png')}}"  alt="dude listening to music">
         </div>
     </main>
 

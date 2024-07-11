@@ -255,3 +255,29 @@ input#playlist-url {
       height: 30vh; /* 30% of the viewport height for large screens */
   }
 }
+
+/* Result page */
+
+.songreceipt {
+  color: var(--purple);
+  padding: 10vw 5vw;
+  box-shadow: 5px 5px #63598596;
+  background-image: url("https://i.pinimg.com/736x/c5/11/6c/c5116cc0374e2273eb888d9f6fd4feae.jpg");
+  width: 20vw;
+}
+
+.song {
+  font-family: var(--header) !important; /* Use Shrikhand font with higher specificity */
+  background-color: red;
+  border-bottom: 5px dotted var(--purple);
+  padding: 10px;
+}
+
+.text-boarder {
+  text-shadow:
+  2px 2px var(--orange),   /* Bottom-right shadow */
+  -2px -2px var(--orange), /* Top-left shadow */
+  -2px 2px var(--orange),  /* Bottom-left shadow */
+  2px -2px var(--orange);  /* Top-right shadow */
+
+}

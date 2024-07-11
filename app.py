@@ -20,7 +20,7 @@ import sys
 import io
 
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="static", static_url_path="")
 app.config['SECRET_KEY'] = os.urandom(64)
 
 
@@ -63,7 +63,7 @@ def connectSpotifyAPI():
 
 
 # FOR OPEN AI API
-USER_KEY = 'sk-proj-hp3bpg2FhMK5aMBxB9xUT3BlbkFJo57hXpRpyFF3mCROmy75' 
+USER_KEY = 'sk-proj-OHr7DtUoBIhtZvSl8Ur5T3BlbkFJfMqN2x8gNN17ufNceiMT' 
 # Create an OpenAPI client
 client = OpenAI(api_key=USER_KEY)
 
@@ -145,31 +145,21 @@ def submit_page():
 
         recommendations = get_chat_response(prompt)
         song_list = extract_song_titles(recommendations)
-        # print(song_list) # Debug
 
-        song_ids = []
+        song_with_preview = []
         for song in song_list:
-            track_id = get_track_id(song)
-            # print(f"Track ID for {song}:", track_id)  # Debugging print
-
-            if track_id:
-               song_ids.append(track_id)
+            track_id, preview_url, artist_name = get_song_data(song)
+            if track_id and preview_url and artist_name:
+               song_with_preview.append({'song': song, 'artist': artist_name, 'track_id': track_id, 'preview_url': preview_url})
         
-        song_links = [get_song_link(id) for id in song_ids if id] 
-        clickable = [make_urls_clickable(link) for link in song_links]
-        
-        # Check functionality
-        artists = [get_track_artist(song) for song in song_list]
-
-        song_data = [{"song": song, "artist": artist, "link": clickable} for song, clickable, artist in zip(song_list, clickable, artists)]
+        for song in song_with_preview:
+            song['link'] = get_song_link(song['track_id'])
        
-
         return render_template('submit_page.html', 
                                title='Submitted Data', 
-                               user_data=user_data, 
-                               recommendations=song_data
+                               user_data = user_data, 
+                               recommendations = song_with_preview
                                )
-        
         
     else:
         flash('No data submitted!', 'error')
@@ -187,74 +177,43 @@ def extract_song_titles(input_string):
     return matches
 
 
-
-# Get track ID from a track name
-def get_track_id(track_name):
-
-    auth_response_data = connectSpotifyAPI()
-    
-    if 'access_token' in auth_response_data:
-        access_token = auth_response_data['access_token']
-        headers = {'Authorization': f'Bearer {access_token}'}
-
-        # Get Track ID from Track Name
-        response = requests.get(
-            f"{BASE_URL}search",
-            headers=headers,
-            params={'q': f'track:{track_name}',
-                    'type': 'track',
-                    'limit': 1}
-                )
-
-        if response.status_code == 200:
-            search_results = response.json()
-            tracks = search_results.get('tracks', {}).get('items', [])
-            if tracks:
-                return tracks[0]['id']
-            else:
-                return None
-        else:
-            print(f"Error {response.status_code}: {response.json()}")
-            return None
-
-def get_track_artist(track_name):
-    auth_response_data = connectSpotifyAPI()
-    
-    if 'access_token' in auth_response_data:
-        access_token = auth_response_data['access_token']
-        headers = {'Authorization': f'Bearer {access_token}'}
-
-        # Get Track ID from Track Name
-        response = requests.get(
-            f"{BASE_URL}search",
-            headers=headers,
-            params={'q': f'track:{track_name}',
-                    'type': 'track',
-                    'limit': 1}
-                )
-
-        if response.status_code == 200:
-            search_results = response.json()
-            tracks = search_results.get('tracks', {}).get('items', [])
-            if tracks:
-                track = tracks[0]
-                artist_name = [artist['name'] for artist in track['artists']]
-                return artist_name
-            else:
-                return None
-        else:
-            print(f"Error {response.status_code}: {response.json()}")
-            return None
-
 # Get a song link from a track ID
 def get_song_link(track_id):
-    # Base URL for Spotify track links
     base_url = 'https://open.spotify.com/track/'
-    
-    # Construct the full Spotify track link
     track_link = base_url + track_id
-    
     return track_link
+
+
+# Get track id, artist, and song preview url from track name
+def get_song_data(track_name):
+    
+    auth_response_data = connectSpotifyAPI()
+    
+    if 'access_token' in auth_response_data:
+        access_token = auth_response_data['access_token']
+        headers = {'Authorization': f'Bearer {access_token}'}
+
+        response = requests.get(
+            f"{BASE_URL}search",
+            headers=headers,
+            params={'q': f'track:{track_name}',
+                    'type': 'track',
+                    'limit': 1}
+                )
+
+        if response.status_code == 200:
+            search_results = response.json()
+            tracks = search_results.get('tracks', {}).get('items', [])
+            
+            if tracks:
+                track = tracks[0]
+                track_id = track['id']
+                preview_url = track.get('preview_url')
+                artist_name = [artist['name'] for artist in track['artists']]
+
+                return track_id, preview_url, artist_name
+        else:
+            return None, None, None
 
 
 # Make a link clickable
@@ -262,23 +221,14 @@ def make_urls_clickable(text):
     url_pattern = re.compile(r'(https://\S+)')
     return url_pattern.sub(r'<a href="\1" target="_blank">\1</a>', text)
 
-
-# Test code for above
-#print(get_track_id("Sha Sha Sha"))
-#id = get_track_id("Sha Sha Sha")
-#print(get_song_link(id))
-
                   
 @app.route('/insights')
 def insights():
     """
-    I want insights to be an option from the home page
-    If chosen, user will be prompted to input their spotify playlist URL
-    (There will be a gif that shows how to)
-    Maybe include a loading text like "Fetching tracks..."
-    When done, it will tell User "Playlist found! Would you like to add another one?"
-    Prompted with Yes or No
-    If no, ChatGPT response will be outputted on page
+    I want insights to start off with the Tune Teller intro paragraph then have an input 
+    form asking for playlist URL. 
+    We're going to try with one playlist for now
+    Once you input the URL, your insights should be printed in the div 
     """
 
     return render_template('insights.html')
