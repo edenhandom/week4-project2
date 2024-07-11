@@ -12,13 +12,14 @@
     <main class="container">
         <div class="left-side">
             <div class="home-box" id="questions-about-us"> 
-                <h2 class="text-boarder">Is there a Link Between your Music Taste and Personality?</h2>
+                <h2 class="text-boarder">Discover the Connection: Does Your Music Taste Reflect Your Personality?</h2>
                 <p> 
                     <br>
                     Ever wondered what your music taste says about you? At Mood Mix, we believe that the 
                     songs you love are more than just tunes – they're a reflection of who you are.
                 </p>
                 <br>
+            <!--
                 <p>
                     Research shows that our personalities are closely linked to our musical preferences. 
                     Extroverts often feel the beat with energetic, rhythmic music, while those with quieter 
@@ -27,6 +28,9 @@
                     cultural background, and even self-esteem. 
                 </p>
                 <br>
+            -->  
+                
+        
                 <h2 class="text-boarder">About us</h2>
                 <br>
                 <p> At Mood Mix, we process your Spotify playlists to provide insights into your personality and recommendations 
@@ -41,7 +45,15 @@
             </div>
         </div>
         <div class="image">
-            <img src="{{url_for('static',filename='images/home.png')}}"  alt="dude listening to music">
+            <a href="{{url_for('insights')}}"> <!--link to insights page--> 
+            <img src="{{url_for('static',filename='images/aura2.png')}}"  alt="aura circle for insights page">
+            <div class="text-overlay"> Playlist Insights </div>
+            </a>
+        <div class="image" style="margin-top: 60px;">
+            <a href="{{url_for('user_form')}}"> <!--link to horoscope page--> 
+            <img src="{{url_for('static',filename='images/aura3.png')}}" alt="aura circle for horoscope page">
+            <div class="text-overlay"> Musical Horoscope </div>
+            </a>
         </div>
     </main>
 

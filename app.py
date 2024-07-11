@@ -4,25 +4,25 @@ import json
 import openai
 import requests
 from openai import OpenAI
-
 import re
-from markupsafe import Markup
-from flask import Flask, request, redirect, session, url_for, render_template, flash
+import sys
+import io
+import spotify_Input
 
-from user_form import UserForm 
+
+from flask import (Flask, request, redirect, session, 
+                   url_for, render_template, flash)
+
+from user_form import UserForm
 
 from spotipy import Spotify
 from spotipy.oauth2 import SpotifyOAuth
 
-from Week3.main import (connectSpotifyAPI, getPlaylistID, getUserData, 
+from Week3.main import (connectSpotifyAPI, getPlaylistID, getUserData,
                         makeEmptySQLDB, appendSQLDB, promptChat, addMoreSongs)
-import sys
-import io
 
-
-app = Flask(__name__, static_folder="static", static_url_path="")
+app = Flask(__name__) # static_folder="static", static_url_path=""
 app.config['SECRET_KEY'] = os.urandom(64)
-
 
 # FOR SPOTIFY API
 CLIENT_ID = 'ad91a46157df4ba080456f92c7a74ef8'
@@ -32,7 +32,6 @@ AUTH_URL = 'https://accounts.spotify.com/api/token'
 BASE_URL = 'https://api.spotify.com/v1/'
 
 redirect_uri = 'http://localhost:3000/callback'
-
 
 
 def connectSpotifyAPI():
@@ -49,8 +48,6 @@ def connectSpotifyAPI():
             'client_secret': client_secret
         }
     )
-
-
     # Check that the status code of the POST request is valid
     if auth_response.status_code == 200:
         return auth_response.json()
@@ -60,10 +57,8 @@ def connectSpotifyAPI():
         return None
 
 
-
-
 # FOR OPEN AI API
-USER_KEY = 'sk-proj-OHr7DtUoBIhtZvSl8Ur5T3BlbkFJfMqN2x8gNN17ufNceiMT' 
+USER_KEY = 'sk-proj-9vYbofToEerb7au2eFQpT3BlbkFJ7lrtsifkWmFjIOHD8pEq' 
 # Create an OpenAPI client
 client = OpenAI(api_key=USER_KEY)
 
@@ -99,12 +94,10 @@ def user_form():
             'personality_traits': form.personality_traits.data,
             'fav_genre1': form.fav_genre1.data,
             'fav_genre2': form.fav_genre2.data,
-            'fav_genre3': form.fav_genre3.data}
-        
-        flash(f'Details submitted successfully!', 'success')
-        
-        # Redirects to a new page, "submit_page"
+            'fav_genre3': form.fav_genre3.data
+            }
         return redirect(url_for('submit_page'))
+    
     return render_template('user_form.html', title='Info', form=form)
 
 
@@ -151,24 +144,22 @@ def submit_page():
             track_id, preview_url, artist_name = get_song_data(song)
             if track_id and preview_url and artist_name:
                song_with_preview.append({'song': song, 'artist': artist_name, 'track_id': track_id, 'preview_url': preview_url})
-        
+
         for song in song_with_preview:
             song['link'] = get_song_link(song['track_id'])
-       
+
         return render_template('submit_page.html', 
                                title='Submitted Data', 
                                user_data = user_data, 
                                recommendations = song_with_preview
                                )
-        
     else:
-        flash('No data submitted!', 'error')
         return redirect(url_for('user_form'))
 
 
 # Extract a song title from Chat GPT response
 def extract_song_titles(input_string):
-    
+
     # Regular expression pattern to match the song titles
     pattern = r'"([^"]+)"'
     # Using re.findall to extract all occurrences of the pattern
@@ -186,9 +177,9 @@ def get_song_link(track_id):
 
 # Get track id, artist, and song preview url from track name
 def get_song_data(track_name):
-    
+
     auth_response_data = connectSpotifyAPI()
-    
+
     if 'access_token' in auth_response_data:
         access_token = auth_response_data['access_token']
         headers = {'Authorization': f'Bearer {access_token}'}
@@ -200,11 +191,10 @@ def get_song_data(track_name):
                     'type': 'track',
                     'limit': 1}
                 )
-
         if response.status_code == 200:
             search_results = response.json()
             tracks = search_results.get('tracks', {}).get('items', [])
-            
+
             if tracks:
                 track = tracks[0]
                 track_id = track['id']
@@ -212,16 +202,10 @@ def get_song_data(track_name):
                 artist_name = [artist['name'] for artist in track['artists']]
 
                 return track_id, preview_url, artist_name
-        else:
-            return None, None, None
+        
+    return None, None, None
 
-
-# Make a link clickable
-def make_urls_clickable(text):
-    url_pattern = re.compile(r'(https://\S+)')
-    return url_pattern.sub(r'<a href="\1" target="_blank">\1</a>', text)
-
-                  
+              
 @app.route('/insights')
 def insights():
     """
@@ -232,6 +216,32 @@ def insights():
     """
 
     return render_template('insights.html')
+
+
+'''
+@app.route('/run_insights', methods=['GET', 'POST'])
+def run_insights():
+    form = PlaylistForm()
+    if form.validate_on_submit():
+        playlist_url = form.playlist_url.data
+        try:
+            requestResponse = connectSpotifyAPI(playlist_url)
+            playlistData = getUserData(requestResponse)
+            if playlistData:
+            # get_chat_response(prompt)
+                insights = get_chat_response(prompt)
+
+                return render_template('insights.html', insights=insights)
+            else:
+                flash('Failed to retrieve data from Spotify.')
+        except Exception as e:
+            flash(str(e))
+        return redirect(url_for('run_insights'))
+
+    return render_template('index.html', form=form)
+
+'''
+
 
 @app.route('/run_insights', methods=['POST'])
 def run_insights():
@@ -279,13 +289,4 @@ def run_insights():
 
 
 if __name__ == '__main__': 
-    
-
-    # requestResponse = connectSpotifyAPI()
-
-    # if requestResponse is None:
-    #     # send to error page
-    #     print("Ran into an error")
-    # else:
-    
     app.run(debug=True, host="0.0.0.0", port=3000)

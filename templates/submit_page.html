@@ -2,28 +2,65 @@
 
 {% block content %}
 
+
+<!-- Flash messages display area -->
+<div class="flash-messages">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</div>
+
+<div class="submit-content">
 <div class="left">
-    <h4>Thanks for your input... </h4>
-    <h1>Here are some songs we think you would like! </h1>
+    <h4>Thanks for your input ... </h4>
+    <h1>Your results are in! </h1>
+
+    <br>
+
+    <h3>Why did you get these results? </h3>
+    <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+    </p>
+
+    <div class="return-buttons">
+        <a class="button" href="{{ url_for('home') }}">Return Home</a>
+        <a class="button" href="{{ url_for('user_form') }}">Get New Insights</a>
+    </div>
 </div>
     
 <div class="songreceipt">
     <table>
         {% for song in recommendations %}
+
         <tr class="song">
-
-            <!-- Song Title -->
+            
             <td>
-                <a href="{{ song.link }}" target="_blank">{{ song.song }}</a>
+                <!-- Song Title -->
+                <a class="bold" href="{{ song.link }}" target="_blank">{{ song.song }}</a>
+                <br>
+                <!-- Song Artist-->
+                <i> {{ song.artist | join(', ') }} </i>
             </td>
-
-            <!-- Song Artist-->
-            <td> {{ song.artist | join(', ') }}</td>
 
             <!-- Song Preview -->
             <td>
                 {% if song.preview_url %}
-                    <a class="button" href="{{ song. preview_url }}" target="_blank">Preview</a>
+                    <div class="audio-container">
+                        <button class="audio-button mono-font" onclick="togglePlay(this)">▶</button>
+                        <audio preload="none">
+                            <source src="{{ song.preview_url }}" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                        <span class="audio-time mono-font">0:00</span>
+                    </div>
+                    <!-- <a class="button" href="{{ song. preview_url }}" target="_blank">Preview</a>
+                    
+                    <iframe src="https://open.spotify.com/embed/track/{{ song.preview_url.split('/')[-1] }}" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+                    -->
                 {% else %}
                     No preview available
                 {% endif %}
@@ -33,8 +70,34 @@
         {% endfor %}
     </table>
 </div>
-
+</div>
 <br>
-<a class="button" href="{{ url_for('home') }}">Go Home</a>
+
+<!-- Script for the way the play preview buttons look -->
+<script>
+    function togglePlay(button) {
+
+        // Play Pause button
+        var audio = button.nextElementSibling;
+        var audioTime = button.nextElementSibling.nextElementSibling;
+        if (audio.paused) {
+            audio.play();
+            button.textContent = '❚❚';
+        } else {
+            audio.pause();
+            button.textContent = '▶';
+        }
+
+        // Timer
+        audio.addEventListener('timeupdate', function() {
+            var minutes = Math.floor(audio.currentTime / 60);
+            var seconds = Math.floor(audio.currentTime % 60);
+            if (seconds < 10) {
+                seconds = '0' + seconds;
+            }
+            audioTime.textContent = minutes + ':' + seconds;
+        });
+    }
+    </script>
 
 {% endblock %}

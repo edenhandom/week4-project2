@@ -1,7 +1,6 @@
 {% extends "layout.html" %}
 
 {% block content %}
-
 <main class="container">
     <div class="left-side">
         <h2 class="special-header"> Tell Us About Your... </h2>
@@ -33,6 +32,14 @@
     <div class="form-container">
         <h3 class="center">Enter Your Information </h3>
         <br>
+        <!-- Display flashed messages -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+            {% endif %}
+        {% endwith %}
         <form action="{{ url_for('user_form') }}" method="POST">
             {{ form.hidden_tag() }}
             
@@ -65,6 +72,5 @@
             <button type="submit">Submit</button>
         </form>
     </div>
-    
 </main>
 {% endblock %}
