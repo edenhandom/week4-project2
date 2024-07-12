@@ -58,7 +58,7 @@ def connectSpotifyAPI():
 
 
 # FOR OPEN AI API
-USER_KEY = 'sk-proj-9vYbofToEerb7au2eFQpT3BlbkFJ7lrtsifkWmFjIOHD8pEq' 
+USER_KEY = 'sk-proj-jlQhbyifyDQqASLF4JhnT3BlbkFJwg8miFFTNF0ORllh1S76' 
 # Create an OpenAPI client
 client = OpenAI(api_key=USER_KEY)
 
