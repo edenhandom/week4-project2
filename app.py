@@ -25,8 +25,11 @@ app = Flask(__name__) # static_folder="static", static_url_path=""
 app.config['SECRET_KEY'] = os.urandom(64)
 
 # FOR SPOTIFY API
-CLIENT_ID = 'ad91a46157df4ba080456f92c7a74ef8'
-CLIENT_SECRET = '9d4140d511c64467a582b075b990cbfe'
+
+CLIENT_ID = os.environ.get("SPOTIFY_CLIENT_ID")
+    # 'ad91a46157df4ba080456f92c7a74ef8'
+CLIENT_SECRET = os.environ.get("SPOTIFY_CLIENT_SECRET")
+    # 9d4140d511c64467a582b075b990cbfe'
 
 AUTH_URL = 'https://accounts.spotify.com/api/token'
 BASE_URL = 'https://api.spotify.com/v1/'
@@ -36,8 +39,8 @@ redirect_uri = 'http://localhost:3000/callback'
 
 def connectSpotifyAPI():
 
-    client_id = 'ad91a46157df4ba080456f92c7a74ef8'
-    client_secret = '9d4140d511c64467a582b075b990cbfe'
+    client_id = CLIENT_ID
+    client_secret = CLIENT_SECRET
 
     # Make a POST request to get the access token
     auth_response = requests.post(
@@ -58,7 +61,7 @@ def connectSpotifyAPI():
 
 
 # FOR OPEN AI API
-USER_KEY = 'sk-proj-jlQhbyifyDQqASLF4JhnT3BlbkFJwg8miFFTNF0ORllh1S76' 
+USER_KEY =   os.environ.get("USER_KEY")
 # Create an OpenAPI client
 client = OpenAI(api_key=USER_KEY)
 
