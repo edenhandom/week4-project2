@@ -7,7 +7,6 @@ from openai import OpenAI
 import re
 import sys
 import io
-import spotify_Input
 
 
 from flask import (Flask, request, redirect, session, 
@@ -15,21 +14,21 @@ from flask import (Flask, request, redirect, session,
 
 from user_form import UserForm
 
+from pull_playlist import *
+
 from spotipy import Spotify
 from spotipy.oauth2 import SpotifyOAuth
 
-from Week3.main import (connectSpotifyAPI, getPlaylistID, getUserData,
-                        makeEmptySQLDB, appendSQLDB, promptChat, addMoreSongs)
 
 app = Flask(__name__) # static_folder="static", static_url_path=""
 app.config['SECRET_KEY'] = os.urandom(64)
 
 # FOR SPOTIFY API
 
-CLIENT_ID = os.environ.get("SPOTIFY_CLIENT_ID")
-    # 'ad91a46157df4ba080456f92c7a74ef8'
-CLIENT_SECRET = os.environ.get("SPOTIFY_CLIENT_SECRET")
-    # 9d4140d511c64467a582b075b990cbfe'
+#CLIENT_ID = os.environ.get("SPOTIFY_CLIENT_ID")
+CLIENT_ID = 'ad91a46157df4ba080456f92c7a74ef8'
+#CLIENT_SECRET = os.environ.get("SPOTIFY_CLIENT_SECRET")
+CLIENT_SECRET= '9d4140d511c64467a582b075b990cbfe'
 
 AUTH_URL = 'https://accounts.spotify.com/api/token'
 BASE_URL = 'https://api.spotify.com/v1/'
@@ -61,7 +60,8 @@ def connectSpotifyAPI():
 
 
 # FOR OPEN AI API
-USER_KEY =   os.environ.get("USER_KEY")
+#USER_KEY = os.environ.get("USER_KEY")
+USER_KEY = 'sk-proj-pcfTxcHI1F4A16j8y8bNT3BlbkFJHbRhwx4OH0ti7KEwfjM4'
 # Create an OpenAPI client
 client = OpenAI(api_key=USER_KEY)
 
@@ -209,87 +209,32 @@ def get_song_data(track_name):
     return None, None, None
 
               
-@app.route('/insights')
+@ app.route('/', methods=['GET', 'POST'])
+@app.route('/insights', methods=['GET', 'POST'])
 def insights():
-    """
-    I want insights to start off with the Tune Teller intro paragraph then have an input 
-    form asking for playlist URL. 
-    We're going to try with one playlist for now
-    Once you input the URL, your insights should be printed in the div 
-    """
-
+    if request.method == 'POST':
+        print("Form submitted")
+        playlist_url = request.form.get('playlist_url')
+        print(f"Received playlist URL: {playlist_url}")
+        
+        if playlist_url:
+            track_artist = get_playlist_data(playlist_url)
+            
+            if track_artist:
+                tracks_artists_str = '. '.join([f"{track}: {artist}" for track, artist in track_artist.items()])
+                
+                prompt = (f'Here is my playlist: {tracks_artists_str}. '
+                          f'What can you tell me about my personality '
+                          f' based on this playlist?')
+                
+                chat_response = get_chat_response(prompt)
+                return render_template('result.html', chat_response=chat_response)
+        
+        flash("Please enter a valid playlist URL.")
+        return redirect(url_for('insights'))
+    
     return render_template('insights.html')
-
-
-'''
-@app.route('/run_insights', methods=['GET', 'POST'])
-def run_insights():
-    form = PlaylistForm()
-    if form.validate_on_submit():
-        playlist_url = form.playlist_url.data
-        try:
-            requestResponse = connectSpotifyAPI(playlist_url)
-            playlistData = getUserData(requestResponse)
-            if playlistData:
-            # get_chat_response(prompt)
-                insights = get_chat_response(prompt)
-
-                return render_template('insights.html', insights=insights)
-            else:
-                flash('Failed to retrieve data from Spotify.')
-        except Exception as e:
-            flash(str(e))
-        return redirect(url_for('run_insights'))
-
-    return render_template('index.html', form=form)
-
-'''
-
-
-@app.route('/run_insights', methods=['POST'])
-def run_insights():
-
-    output = io.StringIO()
-    sys.stdout = output  # Redirect print statements to the output StringIO object
-
-    makeEmptySQLDB()
-
-    get_another_playlist = "yes"
-    requestResponse = connectSpotifyAPI()
-
-    while get_another_playlist == "yes":
-        # Make an SQL Data Base out of the playlist data
-        playlistData = getUserData(requestResponse)
-
-        if playlistData is not None:
-            # Update SQL DB if DB already exists
-            appendSQLDB(playlistData)
-            print("Playlist successfully added to playlist.\n")
-
-        # Will have to add user input error contingency
-        question = "Do you want to add more songs? (yes/no): "
-        get_another_playlist = addMoreSongs(question)
-
-        # Get AI's insight
-        print("--------------------------------------------------------------")
-
-        print("\nTune Teller is generating insights from these songs ... \n")
-        read = promptChat()
-        print("--------------------------------------------------------------")
-
-        if read:
-            print("\nHello! I, Tune Teller, have some insights for you: \n")
-            print(read)
-        else:
-            print("\n... Wait, there is no track data :( !")
-
-    print("\n[ Program Ended ]")
-    print("\n::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::")
-
-    sys.stdout = sys.__stdout__  # Reset redirect.
-    output_string = output.getvalue()
-    return render_template('insights.html', output=output_string)
-
+            
 
 if __name__ == '__main__': 
     app.run(debug=True, host="0.0.0.0", port=3000)

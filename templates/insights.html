@@ -1,24 +1,21 @@
-<!-- Playlist to User Insights -->
-{% extends "layout.html" %} {% block content %}
-<!-- <form action="/run_insights" method="post">
-	<button type="submit" class="btn btn-primary">Let's Go</button>
-  </form> -->
-<div class="insights">
-	<h1 class="title">Ready to Get Started?</h1>
-	<!--div class="container-output">
-		{% if output %}
-		<h2>Output:</h2>
-		<pre>{{ output }}</pre>
-		{% endif %}
-	</div>
--->
-	<input type="text" id="playlist-url" placeholder="Enter your Spotify Playlist URL"">
+{% extends "layout.html" %}
 
-  <form action=" /run_insights" method="post">
-	<button type="submit" class="btn btn-primary">Let's Go</button>
-	</form>
-</div>
+{% block title %}Get Playlist Insights{% endblock %}
 
-</div>
-
+{% block content %}
+    <h2>Get Playlist Insights</h2>
+    <form action="{{ url_for('insights') }}" method="post">
+        <label for="playlist_url">Spotify Playlist URL:</label>
+        <input type="text" id="playlist_url" name="playlist_url" required>
+        <button type="submit">Get Insights</button>
+    </form>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul>
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    {% endwith %}
 {% endblock %}
