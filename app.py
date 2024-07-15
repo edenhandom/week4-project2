@@ -61,7 +61,7 @@ def connectSpotifyAPI():
 
 # FOR OPEN AI API
 #USER_KEY = os.environ.get("USER_KEY")
-USER_KEY = 'sk-proj-pcfTxcHI1F4A16j8y8bNT3BlbkFJHbRhwx4OH0ti7KEwfjM4'
+USER_KEY = 'open_ai_key'
 # Create an OpenAPI client
 client = OpenAI(api_key=USER_KEY)
 
@@ -224,10 +224,17 @@ def insights():
                 tracks_artists_str = '. '.join([f"{track}: {artist}" for track, artist in track_artist.items()])
                 
                 prompt = (f'Here is my playlist: {tracks_artists_str}. '
-                          f'What can you tell me about my personality '
-                          f' based on this playlist?')
+                          f'I want to know what these songs say about my: '
+                          f'1. Musical preferences,'
+                          f'2. Personal insights, and '
+                          f'3. Personality. '
+                          f'Be concise and format with line breaks between '
+                          f'each insight.')
                 
                 chat_response = get_chat_response(prompt)
+                chat_response = chat_response.replace('\n', '<br>')
+
+
                 return render_template('result.html', chat_response=chat_response)
         
         flash("Please enter a valid playlist URL.")
